@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<title></title>
+ 
+<script type="text/javascript">
+
+function getLocation(){
+
+	var location = myForm.zipCode.value;
+	var url = "http://api.geonames.org/postalCodeSearchJSON?postalcode=" + location + "&maxRows=10&username=prmaguire";
+	console.log(url);
+
+	// Create xmlhttprequest object
+	var xmlhttp = null;
+	if (window.XMLHttpRequest) { 
+			xmlhttp = new XMLHttpRequest();
+			//make sure that Browser supports overrideMimeType
+			if ( typeof xmlhttp.overrideMimeType != 'undefined') { xmlhttp.overrideMimeType('text/xml'); }
+	} else if (window.ActiveXObject) {
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}  else {
+			alert('Perhaps your browser does not support xmlhttprequests?');
+	}
+
+	// Create an HTTP GET request
+	xmlhttp.open('GET', url, true);
+
+	// Set the callback function
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+			var myObj1 = JSON.parse(xmlhttp.responseText);
+			var i; 
+			document.write("<table border =\"1\">");
+
+		//DO WORK HERE
+		//var myObj = eval('(' + xmlhttp.responseText + ')');
+			
+			for (i in myObj1.postalCodes){
+			document.write("<tr>");
+				document.write("<td>");
+					document.write(myObj1.postalCodes[i].postalCode + " - " + myObj1.postalCodes[i].placeName + ", " + myObj1.postalCodes[i].adminName1);
+				document.write("</td>");				
+			document.write("</tr>");
+		}
+
+			document.write("</table>");
+			document.close;				
+			
+
+		} else {
+			// waiting for the call to complete		
+		}	
+	};
+
+// Make the actual request
+	xmlhttp.send(null);
+}
+</script>
+</head>
+<body>
+	<form id="myForm" runat="server">
+		<table border=2 style="text-align: right;">			
+			<tr>
+				<td>
+					Enter Zipcode: <input type="text" id="zipCode" name="ZIP">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="button" value="Get Locations" onclick="getLocation();">
+				</td>
+			</tr>
+		</table>
+	</form>
+</BODY>
+</html>
